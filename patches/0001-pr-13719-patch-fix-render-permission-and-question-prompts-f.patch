@@ -1,0 +1,42 @@
+From 72d299326ae3c4dd5b0b14795f06855fcb987470 Mon Sep 17 00:00:00 2001
+From: Rohan Shiralkar <rohan@bhaiyapoints.in>
+Date: Sun, 15 Feb 2026 16:15:31 +0530
+Subject: [PATCH] fix: render permission and question prompts from nested
+ subagent sessions
+
+---
+ .../src/cli/cmd/tui/routes/session/index.tsx      | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/packages/opencode/src/cli/cmd/tui/routes/session/index.tsx b/packages/opencode/src/cli/cmd/tui/routes/session/index.tsx
+index e83b9abe98a..82caa19ec65 100644
+--- a/packages/opencode/src/cli/cmd/tui/routes/session/index.tsx
++++ b/packages/opencode/src/cli/cmd/tui/routes/session/index.tsx
+@@ -122,14 +122,25 @@ export function Session() {
+       .filter((x) => x.parentID === parentID || x.id === parentID)
+       .toSorted((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+   })
++  const descendants = createMemo(() => {
++    const rootID = session()?.parentID ?? session()?.id
++    if (!rootID) return []
++    const ids = new Set([rootID])
++    for (const id of ids) {
++      for (const s of sync.data.session) {
++        if (s.parentID === id) ids.add(s.id)
++      }
++    }
++    return sync.data.session.filter((x) => ids.has(x.id))
++  })
+   const messages = createMemo(() => sync.data.message[route.sessionID] ?? [])
+   const permissions = createMemo(() => {
+     if (session()?.parentID) return []
+-    return children().flatMap((x) => sync.data.permission[x.id] ?? [])
++    return descendants().flatMap((x) => sync.data.permission[x.id] ?? [])
+   })
+   const questions = createMemo(() => {
+     if (session()?.parentID) return []
+-    return children().flatMap((x) => sync.data.question[x.id] ?? [])
++    return descendants().flatMap((x) => sync.data.question[x.id] ?? [])
+   })
+ 
+   const pending = createMemo(() => {
