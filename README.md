@@ -1,24 +1,10 @@
 # OpenCode Patches
 
-This repo contains patches for [OpenCode](https://github.com/anomalyco/opencode) — either use my patches, or add your own.
+A utility repository for setting up patch management for  [OpenCode](https://github.com/anomalyco/opencode). You can use it patch in unmerged PRs from the community and build your own local version of opencode.
 
-## Use My Patches
+## Tools
 
-```bash
-# Clone and apply patches to latest version
-./apply.sh
-
-# Or specify a version
-OPENCODE_TAG=v1.2.9 ./apply.sh
-
-# Build the patched binary
-./build.sh
-```
-
-Find your built binary at `dist/opencode-*/bin/opencode`.
-
-## Add Your Own Patches
-
+### Pull a patch from GH
 ```bash
 # Fetch any GitHub PR as a patch
 ./create-patch.sh https://github.com/anomalyco/opencode/pull/13719
@@ -26,6 +12,18 @@ Find your built binary at `dist/opencode-*/bin/opencode`.
 # Patches are applied in filename order (0001-, 0002-, etc.)
 # Edit the patch file if needed before applying
 ```
+
+## Add Your Own Patches
+```bash
+# Fetch any GitHub PR as a patch
+./create-patch.sh https://github.com/anomalyco/opencode/pull/13719
+
+# Patches are applied in filename order (0001-, 0002-, etc.)
+# Edit the patch file if needed before applying
+```
+
+### Apply Patches and Build Patched OpenCode
+Find your built binary at `dist/opencode-*/bin/opencode`.
 
 ## Scripts
 
@@ -43,3 +41,4 @@ Set the OpenCode version via:
 - Interactive prompt (if neither is set)
 
 Run `./apply.sh --help` for more options.
+
