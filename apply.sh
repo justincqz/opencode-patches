@@ -57,14 +57,12 @@ resolve_tag() {
   # Check environment variable
   if [[ -n "${OPENCODE_TAG:-}" ]]; then
     tag="$OPENCODE_TAG"
-    echo -e "${BLUE}Using tag from OPENCODE_TAG: ${tag}${NC}"
   # Check .env file
   elif [[ -f "${SCRIPT_DIR}/.env" ]]; then
     # shellcheck disable=SC1090
     source "${SCRIPT_DIR}/.env"
     if [[ -n "${OPENCODE_TAG:-}" ]]; then
       tag="$OPENCODE_TAG"
-      echo -e "${BLUE}Using tag from .env file: ${tag}${NC}"
     fi
   fi
 
@@ -124,7 +122,7 @@ clone_repo() {
   local tag="$1"
   
   echo -e "${BLUE}Cloning OpenCode at tag ${tag}...${NC}"
-  if ! git clone --branch "$tag" --depth 1 "$UPSTREAM_URL" "$CLONE_DIR"; then
+  if ! git -c advice.detachedHead=false clone --branch "$tag" --depth 1 --filter=blob:none "$UPSTREAM_URL" "$CLONE_DIR"; then
     echo -e "${RED}Error: Failed to clone repository.${NC}" >&2
     exit 1
   fi
@@ -134,7 +132,6 @@ clone_repo() {
 configure_rerere() {
   cd "$CLONE_DIR"
   
-  # Enable rerere
   git config rerere.enabled true
   
   # Copy existing rerere cache if present
@@ -266,8 +263,8 @@ main() {
   echo "==========================="
   
   # Resolve and validate tag
-  # Using process substitution to capture tag while preserving exit behavior
-  TAG=$(resolve_tag) || { local status=$?; echo -e "${RED}Failed to resolve tag${NC}" >&2; exit $status; }
+  TAG=$(resolve_tag)
+  echo -e "${BLUE}Using tag: ${TAG}${NC}"
   validate_tag "$TAG"
   
   # Handle existing clone

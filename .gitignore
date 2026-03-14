@@ -1,6 +1,9 @@
 # opencode/ — the cloned repo (never committed)
 opencode/
 
+# dist/ — build output (never committed)
+dist/
+
 # .env — user's local environment (secrets/config)
 .env
 

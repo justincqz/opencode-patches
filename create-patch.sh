@@ -96,7 +96,7 @@ if [[ -z "$SUBJECT_LINE" ]]; then
 fi
 
 # Extract title from Subject: [PATCH N/M] Re: {title} or Subject: {title}
-TITLE=$(echo "$SUBJECT_LINE" | sed -E 's/^Subject:(\s*\[PATCH[[:space:]]+[0-9]+/[0-9]+\])?[[:space:]]*(Re:[[:space:]]*)?//I')
+TITLE=$(echo "$SUBJECT_LINE" | sed -E 's/^Subject:[[:space:]]*(\[[A-Z]+[[:space:]]+[0-9]+\/[0-9]+\])?[[:space:]]*(Re:[[:space:]]*)?//I')
 
 # Clean the title: lowercase, replace spaces with hyphens, remove special chars
 TITLE=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]')
