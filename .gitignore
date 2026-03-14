@@ -1,0 +1,16 @@
+# opencode/ — the cloned repo (never committed)
+opencode/
+
+# .env — user's local environment (secrets/config)
+.env
+
+# .tasks/ - tasks files for working on this repo
+.tasks/
+
+# Editor temps
+*.swp
+*.swo
+*~
+
+# macOS junk
+.DS_Store
